@@ -16,38 +16,38 @@
     <button>Multiply</button>
 
     <script>
+      function output(text) {
+        document.getElementById("output_area").append(text.toString() + "\n\n");
+      }
 
-    function output(text) {
-      document.getElementById("output_area").append(text.toString() + "\n\n");
-    }
+      var button = document.getElementsByTagName("button")[0];
 
       var Module = {
         'print': function (text) { output("print\n" + text); },
         'printErr': function (text) { output("printErr\n" + text); },
-      };
-    </script>
 
-    <!-- rj script -->
-    <script>
-    </script>
+        // all my code is in here
+        'onRuntimeInitialized': function() {
+        	button.addEventListener("click", (e) => {
+        		// get mouse x, y
+        		mouseX = e.clientX;
+        		mouseY = e.clientY;
+        		// call multiply with x, y
+        		product = Module.ccall(
+        			'multiply',
+        			'number',
+        			[ 'number', 'number' ],
+        			[mouseX, mouseY]
+        		);
+        		output(mouseX + " * " + mouseY + " = " + product);
+        	});
+        } // /onRuntimeInitialized
 
-    <script>
-    	var button = document.getElementsByTagName("button")[0];
+      }; // /Module
 
-    	button.addEventListener("click", (e) => {
-    		// get mouse x, y
-    		mouseX = e.clientX;
-    		mouseY = e.clientY;
-    		// call multiply with x, y
-    		product = Module.ccall(
-    			'multiply',
-    			'number',
-    			[ 'number', 'number' ],
-    			[mouseX, mouseY]
-    		);
-    		output(mouseX + " * " + mouseY + " = " + product);
-
-    	});
+      // testing with an early click
+      console.log("[ + ] Testing with an early click!");
+      button.click();
     </script>
 
     <script src="multiply.js"></script>
