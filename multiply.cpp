@@ -2,10 +2,9 @@
 
 extern "C"
 {
-  int multiply(float x, float y)
-  {
-      return x * y;
-  }
+  extern float multiply_in_js(float, float);
+
+  int multiply(float x, float y) { return multiply_in_js(x, y); }
 }
 
 int main()
