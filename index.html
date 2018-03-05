@@ -3,9 +3,18 @@
   <head>
     <meta charset="utf-8">
     <title></title>
+
+    <style>
+    button {
+        width: 100%;
+        height: 50%;
+    }
+    </style>
+
   </head>
   <body>
     <textarea id="output_area" style="width:100%; height:50%"></textarea>
+    <button>Multiply</button>
 
     <!-- M19G script -->
     <script>
@@ -21,6 +30,25 @@
 
     <!-- rj script -->
     <script>
+    </script>
+
+    <script>
+    	var button = document.getElementsByTagName("button")[0];
+
+    	button.addEventListener("click", (e) => {
+    		// get mouse x, y
+    		mouseX = e.clientX;
+    		mouseY = e.clientY;
+    		// call multiply with x, y
+    		product = Module.ccall(
+    			'multiply',
+    			'number',
+    			[ 'number', 'number' ],
+    			[mouseX, mouseY]
+    		);
+    		output(mouseX + " * " + mouseY + " = " + product);
+
+    	});
     </script>
 
     <script src="multiply.js"></script>
