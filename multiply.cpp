@@ -1,8 +1,11 @@
 #include <iostream>
 
-int multiply(float x, float y)
+extern "C"
 {
-    return x * y;
+  int multiply(float x, float y)
+  {
+      return x * y;
+  }
 }
 
 int main()
