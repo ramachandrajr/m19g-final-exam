@@ -16,38 +16,92 @@
     <button>Multiply</button>
 
     <script>
+
+      // =======================================================================
+      // METHODS
+
+      /**
+       * add text to text area
+       *
+       * @params   {number}   text
+       */
       function output(text) {
         document.getElementById("output_area").append(text.toString() + "\n\n");
       }
 
-      var button = document.getElementsByTagName("button")[0];
+      /**
+       * Multiply x, y coordinates of mouse click.
+       *
+       * @params   {number}   mouseX   Mouse click x coordinate
+       * @params   {number}   mouseX   Mouse click y coordinate
+       */
+      async function multiplyMouseCoords(mouseX, mouseY) {
+        // wait until 'onRuntimeInitialized' is called
+        await runtimePromise;
+
+        // call multiply with x, y
+        product = Module.ccall(
+          'multiply',
+          'number',
+          [ 'number', 'number' ],
+          [mouseX, mouseY]
+        );
+        output(mouseX + " * " + mouseY + " = " + product);
+      }
+      // =======================================================================
+
+
+
+
+      // =======================================================================
+      // LOCAL MODULE FUNCTIONS
 
       var Module = {
         'print': function (text) { output("print\n" + text); },
         'printErr': function (text) { output("printErr\n" + text); },
 
-        // all my code is in here
+        /**
+         * Will be called when init of c++ lib is finished.
+         */
         'onRuntimeInitialized': function() {
-        	button.addEventListener("click", (e) => {
-        		// get mouse x, y
-        		mouseX = e.clientX;
-        		mouseY = e.clientY;
-        		// call multiply with x, y
-        		product = Module.ccall(
-        			'multiply',
-        			'number',
-        			[ 'number', 'number' ],
-        			[mouseX, mouseY]
-        		);
-        		output(mouseX + " * " + mouseY + " = " + product);
-        	});
-        } // /onRuntimeInitialized
-
+          // resolve the runtimePromise as soon as it is onRuntimeInitialized is
+          // called.
+          runtimePromiseResolve();
+        },
       }; // /Module
+      // =======================================================================
 
+
+
+
+      // =======================================================================
+      // THE PROMISE
+
+      var runtimePromiseResolve;
+      var runtimePromiseReject;
+
+      // Create a promise object
+      var runtimePromise = new Promise(function (resolve, reject) {
+        // make its resolve and reject available on the outside to resolv whenever
+        // we'd like to.
+        runtimePromiseResolve = resolve;
+        runtimePromiseReject = reject;
+      });
+      // =======================================================================
+
+
+
+
+      // =======================================================================
+      // MAIN
+      var button = document.getElementsByTagName("button")[0];
+      // add event listener on button
+      button.addEventListener("click", (e) => { multiplyMouseCoords(e.clientX, e.clientY); });
       // testing with an early click
       console.log("[ + ] Testing with an early click!");
       button.click();
+      // =======================================================================
+
     </script>
 
     <script src="multiply.js"></script>
